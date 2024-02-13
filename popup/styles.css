@@ -1,0 +1,33 @@
+body {
+  width: auto;
+  min-width: 400px;
+  margin: 10px; /* Reset default margins */
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Space between content and input container */
+  height: 100%; /* Fill the body */
+}
+
+#todo-list {
+  /* Add your styles here. Example: */
+  flex-grow: 1; /* Allow the todo-list to fill available space, pushing the input container down */
+}
+
+.input-task-container {
+  color: white;
+  align-self: flex-end; /* Align only this item to the right */
+  /* No need to set width to 100% as it's now aligned to the right */
+  margin-top: 10px;
+}
+
+.task-completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.tracking-time {
+  color: orange;
+}
