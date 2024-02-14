@@ -2,8 +2,10 @@ import Task from "./task.js";
 import Helper from "./helper.js";
 
 export default class TodoList {
-  constructor() {
+  constructor(listName) {
+    this.listName = listName;
     this.tasks = [];
+    this.storageKey = `${this.listName}-tasks`;
   }
 
   /**
@@ -47,7 +49,7 @@ export default class TodoList {
    */
   saveTasks() {
     chrome.storage.local.set({
-      tasks: this.tasks,
+      [this.storageKey]: this.tasks,
       function() {
         console.log("Tasks saved");
       },
@@ -58,8 +60,8 @@ export default class TodoList {
    * Loads the tasks from storage and displays them
    */
   loadTasks() {
-    chrome.storage.local.get(["tasks"], (result) => {
-      this.tasks = result.tasks || [];
+    chrome.storage.local.get([this.storageKey], (result) => {
+      this.tasks = result[this.storageKey] || [];
       this.displayTasks();
     });
   }
@@ -97,10 +99,19 @@ export default class TodoList {
     todoList.innerHTML = ""; // clear the current list
 
     this.tasks.forEach((task, index) => {
+      // initialize task div
       const taskDiv = document.createElement("div");
       taskDiv.classList.add("task");
-      taskDiv.textContent = task.name;
-      task.completed ? taskDiv.classList.add("task-completed") : null;
+
+      // add task name span to task div
+      const taskName = document.createElement("span");
+      taskName.textContent = task.name;
+      taskDiv.appendChild(taskName);
+
+      // add completed class if task is completed
+      task.completed ? taskName.classList.add("task-completed") : null;
+
+      // add tracking-time class if task is tracking time
       task.trackingTime ? taskDiv.classList.add("tracking-time") : null;
 
       // toggle completion button
@@ -109,6 +120,11 @@ export default class TodoList {
       toggleButton.checked = task.completed;
       toggleButton.addEventListener("change", () => {
         this.toggleTaskCompletion(index);
+
+        // if task is completed and tracking time, stop tracking time
+        if (task.completed && task.trackingTime) {
+          this.stopTrackingTime(index);
+        }
       });
 
       // Remove task button
@@ -133,7 +149,7 @@ export default class TodoList {
 
       // add buttons to todolist
       taskDiv.prepend(toggleButton);
-      taskDiv.appendChild(startTimeButton);
+      !task.completed ? taskDiv.appendChild(startTimeButton) : null;
       // only show remove button if not tracking time
       !task.trackingTime ? taskDiv.appendChild(removeButton) : null;
 

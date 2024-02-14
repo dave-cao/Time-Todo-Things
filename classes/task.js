@@ -1,9 +1,10 @@
 export default class Task {
-  constructor(name, completed = false) {
+  constructor(name, category = "today") {
     // task properties
     this.name = name;
-    this.completed = completed;
+    this.completed = false;
     this.dateCreated = new Date();
+    this.category = category;
 
     // time tracking
     this.trackingTime = false;

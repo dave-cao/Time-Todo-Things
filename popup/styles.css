@@ -7,20 +7,29 @@ body {
 .main-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Space between content and input container */
-  height: 100%; /* Fill the body */
+  justify-content: space-between; /* Space between content and bottom container */
 }
 
 #todo-list {
-  /* Add your styles here. Example: */
-  flex-grow: 1; /* Allow the todo-list to fill available space, pushing the input container down */
+  flex-grow: 1; /* Allow the todo-list to fill available space */
+  /* Add any additional styling for the todo-list here */
+}
+
+.bottom-container {
+  display: flex;
+  justify-content: space-between; /* Align children to the opposite ends */
+}
+
+.list-button-container {
+  align-self: flex-end; /* Align to the bottom */
+  /* Additional styling for button container */
 }
 
 .input-task-container {
   color: white;
-  align-self: flex-end; /* Align only this item to the right */
-  /* No need to set width to 100% as it's now aligned to the right */
-  margin-top: 10px;
+  align-self: flex-end; /* Align to the bottom */
+  /* Removed align-self: flex-end; as it's now within bottom-container */
+  /* Additional styling for input container */
 }
 
 .task-completed {
@@ -30,4 +39,9 @@ body {
 
 .tracking-time {
   color: orange;
+}
+
+.list-button-container,
+.input-task-container {
+  margin: 10px 0; /* Add some vertical space */
 }

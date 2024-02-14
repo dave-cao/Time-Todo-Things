@@ -6,9 +6,16 @@
   <body>
     <div class="main-container">
       <div id="todo-list"></div>
-      <div class="input-task-container">
-        <input type="text" id="new-task" />
-        <button id="add-task">Add Task</button>
+      <div class="bottom-container">
+        <div class="list-button-container">
+          <button id="today-list">Today</button>
+          <button id="all-list">All</button>
+          <!-- Consider renaming one of these buttons if they have different functionalities -->
+        </div>
+        <div class="input-task-container">
+          <input type="text" id="new-task" />
+          <button id="add-task">Add Task</button>
+        </div>
       </div>
     </div>
     <script type="module" src="popup.js"></script>
