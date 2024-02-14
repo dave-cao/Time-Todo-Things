@@ -94,70 +94,85 @@ export default class TodoList {
   /**
    * Displays the tasks in the popup
    */
+  // Function to display tasks in the todo list
   displayTasks() {
+    // Select the todo list container in the DOM
     const todoList = document.getElementById("todo-list");
-    todoList.innerHTML = ""; // clear the current list
+    // Clear the current list to ensure we're not duplicating tasks
+    todoList.innerHTML = "";
 
-    this.tasks.forEach((task, index) => {
-      // initialize task div
-      const taskDiv = document.createElement("div");
-      taskDiv.classList.add("task");
+    // Sort tasks by completion status, uncompleted tasks first
+    this.tasks
+      .sort((a, b) => b.completed - a.completed)
+      .forEach((task, index) => {
+        // Create a div element for each task
+        const taskDiv = document.createElement("div");
+        taskDiv.classList.add("task"); // Add 'task' class for styling
 
-      // add task name span to task div
-      const taskName = document.createElement("span");
-      taskName.textContent = task.name;
-      taskDiv.appendChild(taskName);
+        // Create a span for the task name and append it to the task div
+        const taskName = document.createElement("span");
+        taskName.classList.add("task-name"); // Add 'task-name' class for styling
+        taskName.textContent = task.name; // Set the task name
+        taskDiv.appendChild(taskName); // Add the name span to the task div
 
-      // add completed class if task is completed
-      task.completed ? taskName.classList.add("task-completed") : null;
-
-      // add tracking-time class if task is tracking time
-      task.trackingTime ? taskDiv.classList.add("tracking-time") : null;
-
-      // toggle completion button
-      const toggleButton = document.createElement("input");
-      toggleButton.type = "checkbox";
-      toggleButton.checked = task.completed;
-      toggleButton.addEventListener("change", () => {
-        this.toggleTaskCompletion(index);
-
-        // if task is completed and tracking time, stop tracking time
-        if (task.completed && task.trackingTime) {
-          this.stopTrackingTime(index);
+        // If the task is completed, add 'task-completed' class for styling (e.g., strikethrough)
+        if (task.completed) {
+          taskName.classList.add("task-completed");
         }
+
+        // If the task is currently being timed, add 'tracking-time' class for special styling
+        if (task.trackingTime) {
+          taskDiv.classList.add("tracking-time");
+        }
+
+        // Create a checkbox to toggle the task completion status
+        const toggleButton = document.createElement("input");
+        toggleButton.type = "checkbox";
+        toggleButton.checked = task.completed; // Set the checkbox state based on the task's completion status
+        // Add an event listener to handle the change event (task completion toggle)
+        toggleButton.addEventListener("change", () => {
+          this.toggleTaskCompletion(index); // Toggle the completion status in the task list
+          if (task.completed && task.trackingTime) {
+            // If completing a task that is being timed, stop the time tracking
+            this.stopTrackingTime(index);
+          }
+        });
+
+        // Create a button to remove the task from the list
+        const removeButton = document.createElement("span");
+        removeButton.classList.add("remove-task"); // Add 'remove-task' class for styling
+        removeButton.textContent = "❌"; // Set button text
+        removeButton.title = "Remove Task"; // Tooltip for additional information
+        // Event listener for the remove task button
+        removeButton.addEventListener("click", () => this.removeTask(index));
+
+        // Create a button to start or stop time tracking for the task
+        const startTimeButton = document.createElement("span");
+        startTimeButton.classList.add("start-time"); // Add 'start-time' class for styling
+        startTimeButton.textContent = task.trackingTime ? "🛑" : "⏳"; // Set the button text based on tracking status
+        startTimeButton.title = task.trackingTime
+          ? "Stop Tracking Time"
+          : "Start Tracking Time"; // Tooltip for additional information
+        // Event listener to toggle time tracking
+        startTimeButton.addEventListener("click", () => {
+          task.trackingTime
+            ? this.stopTrackingTime(index)
+            : this.startTrackingTime(index);
+        });
+
+        // If the task has tracked time, create a span to display the total time
+        const totalTime = document.createElement("span");
+        totalTime.classList.add("total-time"); // Add 'total-time' class for styling
+        totalTime.textContent = Helper.getFormattedTime(task.totalTime); // Format and set the total tracked time
+
+        // Add elements to the task div in the desired order
+        if (!task.completed) taskDiv.prepend(startTimeButton); // Only add if the task is not completed
+        taskDiv.prepend(toggleButton);
+        if (!task.trackingTime) taskDiv.appendChild(removeButton); // Only add if not currently tracking time
+        if (task.totalTime) taskDiv.appendChild(totalTime); // Only add if there's tracked time to display
+
+        // Finally, append the task div to the todo list container
+        todoList.appendChild(taskDiv);
       });
-
-      // Remove task button
-      const removeButton = document.createElement("button");
-      removeButton.textContent = "X";
-      removeButton.addEventListener("click", () => {
-        this.removeTask(index);
-      });
-
-      // start time tracking button
-      const startTimeButton = document.createElement("button");
-      startTimeButton.textContent = task.trackingTime ? "⏳" : "📝";
-      startTimeButton.addEventListener("click", () => {
-        task.trackingTime
-          ? this.stopTrackingTime(index)
-          : this.startTrackingTime(index);
-      });
-
-      // add total time to task
-      const totalTime = document.createElement("span");
-      totalTime.textContent = Helper.getFormattedTime(task.totalTime);
-
-      // add buttons to todolist
-      taskDiv.prepend(toggleButton);
-      !task.completed ? taskDiv.appendChild(startTimeButton) : null;
-      // only show remove button if not tracking time
-      !task.trackingTime ? taskDiv.appendChild(removeButton) : null;
-
-      // only show time if time was tracked
-      task.totalTime ? taskDiv.appendChild(totalTime) : null;
-
-      // add todolist to popup
-      todoList.appendChild(taskDiv);
-    });
   }
 }

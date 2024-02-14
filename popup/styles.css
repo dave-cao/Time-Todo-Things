@@ -1,35 +1,100 @@
+/* General Reset */
 body {
+  font-family: "Arial", sans-serif;
   width: auto;
   min-width: 400px;
-  margin: 10px; /* Reset default margins */
+  margin: 10px;
+  background-color: #f4f4f4;
+  color: #333;
 }
 
+/* Main Container */
 .main-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Space between content and bottom container */
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
+/* Todo List Styles */
 #todo-list {
-  flex-grow: 1; /* Allow the todo-list to fill available space */
-  /* Add any additional styling for the todo-list here */
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto; /* Allows scrolling if list is long */
 }
 
+/* Bottom Container */
 .bottom-container {
   display: flex;
-  justify-content: space-between; /* Align children to the opposite ends */
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #eee;
+  border-top: 1px solid #ddd;
 }
 
-.list-button-container {
-  align-self: flex-end; /* Align to the bottom */
-  /* Additional styling for button container */
-}
-
+/* Buttons and Input Container */
+.list-button-container,
 .input-task-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between buttons or input and button */
+}
+
+/* Styling for List and Input Buttons */
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
   color: white;
-  align-self: flex-end; /* Align to the bottom */
-  /* Removed align-self: flex-end; as it's now within bottom-container */
-  /* Additional styling for input container */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Input Field Styling */
+input[type="text"] {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+  margin-left: 10px;
+}
+
+/* Task Styling */
+.task {
+  position: relative;
+  background-color: #fafafa;
+  border: 1px solid #eaeaea;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.remove-task {
+  position: absolute; /* Position the button absolutely within .task */
+  top: 0; /* Align to the top */
+  right: 0; /* Align to the right */
+  font-size: 12px; /* Smaller font size */
+  padding: 2px 5px; /* Smaller padding */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  font-size: 6px;
+  margin: 2px;
+}
+
+.start-time {
+  cursor: pointer;
+  margin: 4px;
+  margin-left: 0px;
 }
 
 .task-completed {
@@ -41,7 +106,19 @@ body {
   color: orange;
 }
 
-.list-button-container,
-.input-task-container {
-  margin: 10px 0; /* Add some vertical space */
+/* Checkbox and Button Customization for Tasks */
+.task input[type="checkbox"] {
+  margin-right: 3px;
+}
+
+.task button {
+  margin-left: auto; /* Pushes button to the right */
+}
+
+/* Total Time Styling */
+.total-time {
+  margin-left: auto; /* Pushes the span to the right */
+  width: 90px;
+  text-align: right;
+  color: grey;
 }
