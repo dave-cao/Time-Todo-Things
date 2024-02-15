@@ -14,7 +14,7 @@ export default class TodoList {
    */
   addTask(taskName) {
     // in the future, we will add time and such
-    const task = new Task(taskName);
+    const task = new Task(taskName, Helper.generateUniqueId());
     this.tasks.push(task);
 
     // save the updated tasks to storage
@@ -28,20 +28,26 @@ export default class TodoList {
    * Removes the task from the list and saves the updated list to storage
    * @param {*} index to remove
    */
-  removeTask(index) {
-    this.tasks.splice(index, 1);
-    this.saveTasks();
-    this.displayTasks();
+  removeTask(taskId) {
+    const taskIndex = this.tasks.findIndex((task) => task.id === taskId);
+    if (taskIndex > -1) {
+      this.tasks.splice(taskIndex, 1);
+      this.saveTasks();
+      this.displayTasks();
+    }
   }
 
   /**
    * Toggles the completed status of the task and saves the updated list to storage
    * @param {*} index to toggle
    */
-  toggleTaskCompletion(index) {
-    this.tasks[index].completed = !this.tasks[index].completed;
-    this.saveTasks();
-    this.displayTasks();
+  toggleTaskCompletion(taskId) {
+    const task = this.tasks.find((task) => task.id === taskId);
+    if (task) {
+      task.completed = !task.completed;
+      this.saveTasks();
+      this.displayTasks();
+    }
   }
 
   /**
@@ -70,25 +76,35 @@ export default class TodoList {
    * Starts tracking the time of the task
    * @param {*} index of task to start tracking
    */
-  startTrackingTime(index) {
-    this.tasks[index].trackingTime = true;
-    this.tasks[index].startTime = new Date().getTime();
-
-    this.saveTasks();
-    this.displayTasks();
+  startTrackingTime(taskId) {
+    const task = this.tasks.find((task) => task.id === taskId);
+    if (task) {
+      task.trackingTime = true;
+      task.startTime = new Date().getTime();
+      this.saveTasks();
+      this.displayTasks();
+    }
   }
 
   /**
    * Stops tracking the time of the task and updates the total time
    */
-  stopTrackingTime(index) {
-    this.tasks[index].trackingTime = false;
-    this.tasks[index].endTime = new Date().getTime();
-    this.tasks[index].totalTime +=
-      this.tasks[index].endTime - this.tasks[index].startTime;
+  stopTrackingTime(taskId) {
+    const task = this.tasks.find((task) => task.id === taskId);
+    if (task) {
+      task.trackingTime = false;
+      task.endTime = new Date().getTime();
+      task.totalTime += task.endTime - task.startTime;
+      this.saveTasks();
+      this.displayTasks();
+    }
+  }
 
-    this.saveTasks();
-    this.displayTasks();
+  /**
+   * Get overall time tracked for all tasks
+   */
+  getTotalTimeTracked() {
+    return this.tasks.reduce((acc, task) => acc + task.totalTime, 0);
   }
 
   /**
@@ -101,10 +117,24 @@ export default class TodoList {
     // Clear the current list to ensure we're not duplicating tasks
     todoList.innerHTML = "";
 
+    /**
+     * TOTAL TIME TRACKED HERE
+     */
+    // Calculate total time tracked across all tasks
+    const totalTimeTracked = this.getTotalTimeTracked(); // Assuming this method returns time in milliseconds
+    const formattedTotalTime = Helper.getFormattedTime(totalTimeTracked); // Format the total time for display
+    // Create a div to display the total time tracked
+    const totalTimeDisplay = document.createElement("div");
+    totalTimeDisplay.classList.add("total-time-tracked"); // Add class for styling if needed
+    totalTimeDisplay.textContent = `Total Time: ${formattedTotalTime}`;
+    // Append the total time display to the todo list container or another suitable place
+
+    // OTHER
     // Sort tasks by completion status, uncompleted tasks first
     this.tasks
       .sort((a, b) => b.completed - a.completed)
       .forEach((task, index) => {
+        console.log(task);
         // Create a div element for each task
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task"); // Add 'task' class for styling
@@ -131,10 +161,10 @@ export default class TodoList {
         toggleButton.checked = task.completed; // Set the checkbox state based on the task's completion status
         // Add an event listener to handle the change event (task completion toggle)
         toggleButton.addEventListener("change", () => {
-          this.toggleTaskCompletion(index); // Toggle the completion status in the task list
+          this.toggleTaskCompletion(task.id); // Toggle the completion status in the task list
           if (task.completed && task.trackingTime) {
             // If completing a task that is being timed, stop the time tracking
-            this.stopTrackingTime(index);
+            this.stopTrackingTime(task.id);
           }
         });
 
@@ -144,7 +174,7 @@ export default class TodoList {
         removeButton.textContent = "❌"; // Set button text
         removeButton.title = "Remove Task"; // Tooltip for additional information
         // Event listener for the remove task button
-        removeButton.addEventListener("click", () => this.removeTask(index));
+        removeButton.addEventListener("click", () => this.removeTask(task.id));
 
         // Create a button to start or stop time tracking for the task
         const startTimeButton = document.createElement("span");
@@ -156,8 +186,8 @@ export default class TodoList {
         // Event listener to toggle time tracking
         startTimeButton.addEventListener("click", () => {
           task.trackingTime
-            ? this.stopTrackingTime(index)
-            : this.startTrackingTime(index);
+            ? this.stopTrackingTime(task.id)
+            : this.startTrackingTime(task.id);
         });
 
         // If the task has tracked time, create a span to display the total time
@@ -173,6 +203,7 @@ export default class TodoList {
 
         // Finally, append the task div to the todo list container
         todoList.appendChild(taskDiv);
+        todoList.prepend(totalTimeDisplay); // You can also prepend if you want it at the top
       });
   }
 }

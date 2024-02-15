@@ -122,3 +122,9 @@ input[type="text"] {
   text-align: right;
   color: grey;
 }
+
+.total-time-tracked {
+  color: grey;
+  margin-bottom: 20px;
+  text-align: left;
+}

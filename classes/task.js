@@ -1,7 +1,8 @@
 export default class Task {
-  constructor(name, category = "today") {
+  constructor(name, id, category = "today") {
     // task properties
     this.name = name;
+    this.id = id;
     this.completed = false;
     this.dateCreated = new Date();
     this.category = category;
