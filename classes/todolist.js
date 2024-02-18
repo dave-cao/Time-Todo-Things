@@ -38,6 +38,15 @@ export default class TodoList {
   }
 
   /**
+   * Clears all tasks from the list and saves the updated list to storage
+   */
+  clearTasks() {
+    this.tasks = [];
+    this.saveTasks();
+    this.displayTasks();
+  }
+
+  /**
    * Toggles the completed status of the task and saves the updated list to storage
    * @param {*} index to toggle
    */
@@ -124,6 +133,7 @@ export default class TodoList {
     const totalTimeTracked = this.getTotalTimeTracked(); // Assuming this method returns time in milliseconds
     const formattedTotalTime = Helper.getFormattedTime(totalTimeTracked); // Format the total time for display
     // Create a div to display the total time tracked
+
     const totalTimeDisplay = document.createElement("div");
     totalTimeDisplay.classList.add("total-time-tracked"); // Add class for styling if needed
     totalTimeDisplay.textContent = `Total Time: ${formattedTotalTime}`;

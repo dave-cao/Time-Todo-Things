@@ -1,6 +1,6 @@
 /* General Reset */
 body {
-  font-family: "Arial", sans-serif;
+  font-family: "Poppins", sans-serif;
   width: auto;
   min-width: 400px;
   margin: 10px;
@@ -29,7 +29,8 @@ body {
 /* Bottom Container */
 .bottom-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   padding: 10px;
   background-color: #eee;
   border-top: 1px solid #ddd;
@@ -43,15 +44,21 @@ body {
   gap: 10px; /* Space between buttons or input and button */
 }
 
+.input-task-container {
+  margin-bottom: 30px;
+  margin-right: 20px;
+  margin-left: 10px;
+}
+
 /* Styling for List and Input Buttons */
 button {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
+  background-color: #4682b4;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.1s ease;
 }
 
 button:hover {
@@ -103,7 +110,7 @@ input[type="text"] {
 }
 
 .tracking-time {
-  color: orange;
+  color: #cd5c5c;
 }
 
 /* Checkbox and Button Customization for Tasks */
@@ -127,4 +134,45 @@ input[type="text"] {
   color: grey;
   margin-bottom: 20px;
   text-align: left;
+}
+
+.active {
+  background-color: grey;
+}
+.active:hover {
+  background-color: grey;
+}
+
+#delete-list {
+  background-color: #cd5c5c;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  color: white;
+}
+
+#delete-list:hover {
+  background-color: darkred;
+}
+
+.dropdown-content {
+  background-color: #f9f9f9; /* Background color */
+  color: black; /* Text color */
+  padding: 6.5px; /* Padding inside the dropdown */
+  border: 1px solid #ccc; /* Border around the dropdown */
+  border-radius: 4px; /* Rounded corners */
+  width: 200px; /* Specific width */
+}
+
+/* Style the dropdown arrow */
+.dropdown-content::-ms-expand {
+  display: none; /* Hide the default arrow in IE */
+}
+
+/* Style options */
+.dropdown-content option {
+  padding: 5px; /* Padding for options */
+  margin: 2px; /* Margin around options */
 }
